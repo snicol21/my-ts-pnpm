@@ -1,6 +1,6 @@
 ### README.md
 
-# Testing issue with 8.14.0
+# Testing PNPM issue with v8.14.2
 
 ## Setup and Packaging
 
