@@ -7,14 +7,15 @@
   ],
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prepack": "clean-package",
+    "postpack": "clean-package restore"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "clean-package": "^2.2.0",
-    "turbo": "^1.11.3",
     "typescript": "^5.3.3"
   },
   "clean-package": "clean-package.js"
