@@ -1,16 +1,37 @@
 ### README.md
 
-# Testing PNPM issue with v8.14.2
+# Investigating PNPM Issue in v8.14.2
 
-## Setup and Packaging
+## Overview
 
-Ensure you have `pnpm` version 8.14.2 installed. Run the following commands:
+This documentation details an issue observed with PNPM version 8.14.2, specifically related to the `prepack` script execution during packaging.
 
-```bash
-pnpm install && pnpm build && pnpm pack
-```
+## Setup and Packaging Steps
 
-This will create a `.tgz` file. Please inspect the contents of this file and verify that the `prepack` script using `clean-package.js` was not executed, which is an observed behavior with `pnpm` version 8.14.2. This process works as expected in version 8.14.0.
+To replicate the issue, ensure you have PNPM version 8.14.2 installed. Follow these steps:
+
+1. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+2. Build the package:
+
+   ```bash
+   pnpm build
+   ```
+
+3. Create a package archive:
+   ```bash
+   pnpm pack
+   ```
+
+This sequence generates a `.tgz` file. Please inspect the contents of this archive. The expectation is that the `prepack` script, which utilizes `clean-package.js`, should execute automatically. However, in PNPM version 8.14.2, this script does not seem to run as expected. This behavior differs from what is observed in PNPM version 8.14.0.
+
+### Observed File Structure
+
+Within the `.tgz` file, you may notice the following structure:
 
 ```
 .
@@ -19,13 +40,17 @@ This will create a `.tgz` file. Please inspect the contents of this file and ver
     │   └── index.js
     ├── package.json
     └── src/
-        └── index.ts   <---- this file is what started showing up
+        └── index.ts   // This file unexpectedly appears in the package
 ```
 
-I've noticed that if I run things in this order it works as expected.
+## Workaround
+
+A temporary workaround is to manually run the `prepack` script before packaging. The following sequence ensures the correct execution of `prepack`:
 
 ```bash
 pnpm install && pnpm build && pnpm prepack && pnpm pack
 ```
 
-But I've done over 100 releases of the package I'm working with and it has always ran `prepack` for me without me having to manually run it.
+## Historical Context
+
+In over 100 releases of the package being worked on, `prepack` has always run automatically. This issue seems specific to PNPM version 8.14.2, indicating a potential regression or change in behavior in this version.
